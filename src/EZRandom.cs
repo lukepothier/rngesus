@@ -19,10 +19,10 @@ namespace EZRNG
         #region UInt32
 
         /// <summary>
-        /// Creates a cryptographically secure unsigned 32-bit integer
+        /// Generates a cryptographically secure unsigned 32-bit integer
         /// </summary>
-        /// <returns>A random, unsigned 32-bit integer</returns>
-        public static uint GenerateInteger()
+        /// <returns>A random unsigned 32-bit integer</returns>
+        public static uint GenerateInt()
         {
             var buffer = new byte[sizeof(uint)];
             _prng.GetBytes(buffer);
@@ -31,20 +31,20 @@ namespace EZRNG
         }
 
         /// <summary>
-        /// Creates a cryptographically secure unsigned 32-bit integer equal to or below a provided maximum
+        /// Generates a cryptographically secure unsigned 32-bit integer equal to or below a provided maximum
         /// </summary>
         /// <param name="maximum">The maximum value of the integer required</param>
         /// <returns>A random unsigned 32-bit integer equal to or below the provided maximum</returns>
-        public static uint GenerateInteger(uint maximum)
-            => GenerateInteger(uint.MinValue, maximum);
+        public static uint GenerateInt(uint maximum)
+            => GenerateInt(uint.MinValue, maximum);
 
         /// <summary>
-        /// Creates a cryptographically secure unsigned 32-bit integer within a provided range
+        /// Generates a cryptographically secure unsigned 32-bit integer within a provided range
         /// </summary>
         /// <param name="minimum">The minimum value of the integer required</param>
         /// <param name="maximum">The maximum value of the integer required</param>
         /// <returns>A random unsigned 32-bit integer within the provided range</returns>
-        public static uint GenerateInteger(uint minimum, uint maximum)
+        public static uint GenerateInt(uint minimum, uint maximum)
         {
             if (minimum > maximum)
                 throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
@@ -74,9 +74,9 @@ namespace EZRNG
         #region UInt64
 
         /// <summary>
-        /// Creates a cryptographically secure unsigned 64-bit integer
+        /// Generates a cryptographically secure unsigned 64-bit integer
         /// </summary>
-        /// <returns>A random, unsigned 64-bit integer</returns>
+        /// <returns>A random unsigned 64-bit integer</returns>
         public static ulong GenerateLong()
         {
             var buffer = new byte[sizeof(ulong)];
@@ -86,7 +86,7 @@ namespace EZRNG
         }
 
         /// <summary>
-        /// Creates a cryptographically secure unsigned 64-bit integer equal to or below a provided maximum
+        /// Generates a cryptographically secure unsigned 64-bit integer equal to or below a provided maximum
         /// </summary>
         /// <param name="maximum">The maximum value of the integer required</param>
         /// <returns>A random unsigned 64-bit integer equal to or below the provided maximum</returns>
@@ -94,7 +94,7 @@ namespace EZRNG
             => GenerateLong(ulong.MinValue, maximum);
 
         /// <summary>
-        /// Creates a cryptographically secure unsigned 64-bit integer within a provided range
+        /// Generates a cryptographically secure unsigned 64-bit integer within a provided range
         /// </summary>
         /// <param name="minimum">The minimum value of the integer required</param>
         /// <param name="maximum">The maximum value of the integer required</param>
@@ -125,5 +125,27 @@ namespace EZRNG
         }
 
         #endregion UInt64
+
+        #region Float
+
+        /// <summary>
+        /// Generates a cryptographically secure positive 32-bit floating point number between 0 and 1
+        /// </summary>
+        /// <returns>A random 32-bit positive floating point number between 0 and 1</returns>
+        public static float GenerateFloat()
+            => (float)GenerateDouble();
+
+        #endregion Float
+
+        #region Double
+
+        /// <summary>
+        /// Generates a cryptographically secure positive 64-bit floating point number between 0 and 1
+        /// </summary>
+        /// <returns>A random 64-bit positive floating point number between 0 and 1</returns>
+        public static double GenerateDouble()
+            => GenerateInt() / (uint.MaxValue + 1d);
+
+        #endregion Double
     }
 }
