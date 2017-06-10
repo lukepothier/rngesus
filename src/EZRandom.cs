@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace EZRNG
 {
-    public class EZRandom
+    public static class EZRandom
     {
         #region Init/Ctor
 
@@ -60,7 +60,7 @@ namespace EZRNG
                 _prng.GetBytes(buffer);
                 var randomInteger = BitConverter.ToUInt32(buffer, 0);
 
-                const ulong max = ((ulong)uint.MaxValue + 1);
+                const ulong max = (ulong)uint.MaxValue + 1;
                 var remainder = max % difference;
                 if (randomInteger < max - remainder)
                 {
@@ -115,11 +115,11 @@ namespace EZRNG
                 _prng.GetBytes(buffer);
                 var randomInteger = BitConverter.ToUInt64(buffer, 0);
 
-                const ulong max = (ulong.MaxValue);
+                const ulong max = ulong.MaxValue;
                 var remainder = max % difference;
                 if (randomInteger < max - remainder)
                 {
-                    return (minimum + (randomInteger % difference));
+                    return minimum + (randomInteger % difference);
                 }
             }
         }
@@ -176,5 +176,11 @@ namespace EZRNG
         }
 
         #endregion Byte Array
+
+        #region Strings
+
+        // TODO :: RNG for strings
+
+        #endregion Strings
     }
 }
