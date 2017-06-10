@@ -147,5 +147,14 @@ namespace EZRNG
             => GenerateInt() / (uint.MaxValue + 1d);
 
         #endregion Double
+
+        #region Boolean
+
+        public static bool GenerateBool()
+        {
+            return GenerateInt() % 2 == 0;
+        }
+
+        #endregion Boolean
     }
 }
