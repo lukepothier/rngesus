@@ -93,7 +93,7 @@ var randomString = RNGesus.GenerateByteArray(RNGesus.GenerateInt(16, 32));
 
 ## A word of warning:
 
-Generating strings with custom character sets is only **truly** uniform if `256` evenly divides the number of available characters. This is because there are `256` possible values of a single byte,
+Strings generated with custom character sets are only _truly_ uniform if `256` evenly divides the number of available characters. This is because there are `256` possible values of a single byte,
 and RNGesus uses modulo arithmetic to select the output character from the character set. For example, the character set
 
 ```csharp
