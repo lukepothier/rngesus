@@ -3,6 +3,6 @@ branches:
   only:
   - master
 before_build:
-- cmd: nuget restore
+- cmd: nuget restore \src\RNGesus.Tests
 build:
   verbosity: diagnostic
