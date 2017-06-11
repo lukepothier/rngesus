@@ -123,3 +123,5 @@ which is `64` characters long - and also happens to be what RNGesus uses when no
 ## Acknowledgements
 
 * GitHub user [Markus Olsson (niik)](https://github.com/niik), whose [implementation](https://gist.github.com/niik/1017834) RNGesus borrows from.
+
+For any comments, questions, complaints, suggestions or requests, please don't hesitate to [create an issue](https://github.com/lukepothier/rngesus/issues/new) or contact me at [lukepothier@gmail.com](mailto:lukepothier@gmail.com).
