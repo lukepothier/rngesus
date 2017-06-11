@@ -4,6 +4,14 @@ using NUnit.Framework;
 
 namespace RNGesus.Tests
 {
+    /// <summary>
+    /// The unit tests for RNGesus.Generator
+    /// </summary>
+    /// <remarks>
+    /// All tests have method names ending with 'ReturnsNoDuplicates' are not ideal unit tests. For each of them, the method they are testing can theoretically
+    /// produces valid duplicate results. However, provided the inputs are sensible, it is extremely unlikely that any duplicates returned are valid.
+    /// It's much more likely that there has been some sort of implementation error. Therefore, those tests remain useful.
+    /// </remarks>
     [TestFixture]
     public class GeneratorTests
     {
@@ -37,8 +45,6 @@ namespace RNGesus.Tests
             Assert.That(() => result <= uint.MaxValue);
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateInt_ReturnsNoDuplicates()
         {
@@ -55,8 +61,6 @@ namespace RNGesus.Tests
         public void GenerateInt_Maximum_ReturnsInRange()
             => Assert.That(() => Generator.GenerateInt(999) <= 999);
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateInt_Maximum_ReturnsNoDuplicates()
         {
@@ -78,8 +82,6 @@ namespace RNGesus.Tests
             Assert.That(() => result <= 999999);
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateInt_MinimumAndMaximum_ReturnsNoDuplicates()
         {
@@ -124,8 +126,6 @@ namespace RNGesus.Tests
             Assert.That(() => result <= ulong.MaxValue);
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateLong_ReturnsNoDuplicates()
         {
@@ -142,8 +142,6 @@ namespace RNGesus.Tests
         public void GenerateLong_Maximum_ReturnsInRange()
             => Assert.That(() => Generator.GenerateLong(999) <= 999);
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateLong_Maximum_ReturnsNoDuplicates()
         {
@@ -165,8 +163,6 @@ namespace RNGesus.Tests
             Assert.That(() => result <= 999999);
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateLong_MinimumAndMaximum_ReturnsNoDuplicates()
         {
@@ -196,8 +192,6 @@ namespace RNGesus.Tests
             Assert.That(result <= 1);
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateFloat_ReturnsNoDuplicates()
         {
@@ -227,8 +221,6 @@ namespace RNGesus.Tests
             Assert.That(result <= 1);
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateDouble_ReturnsNoDuplicates()
         {
@@ -266,8 +258,6 @@ namespace RNGesus.Tests
             Assert.That((result.Length == expectedLength));
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateByteArray_ReturnsNoDuplicates()
         {
@@ -329,8 +319,6 @@ namespace RNGesus.Tests
             Assert.That((result.Length == expectedLength));
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateString_ReturnsNoDuplicates()
         {
@@ -353,8 +341,6 @@ namespace RNGesus.Tests
             Assert.That((result.Length == expectedLength));
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateString_ValidCharactersString_ReturnsNoDuplicates()
         {
@@ -378,8 +364,6 @@ namespace RNGesus.Tests
             Assert.That((result.Length == expectedLength));
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateString_ValidCharactersString_RemoveDuplicatesFalse_ReturnsNoDuplicates()
         {
@@ -403,8 +387,6 @@ namespace RNGesus.Tests
             Assert.That((result.Length == expectedLength));
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateString_ValidCharactersCharArray_ReturnsNoDuplicates()
         {
@@ -428,8 +410,6 @@ namespace RNGesus.Tests
             Assert.That((result.Length == expectedLength));
         }
 
-        // This test is less than ideal, since valid duplicate results are theoretically possible, albeit practically impossible.
-        // Duplicates occurring with sensible inputs is a definite red flag.
         [Test]
         public void GenerateString_ValidCharactersCharArray_RemoveDuplicatesFalse_ReturnsNoDuplicates()
         {
