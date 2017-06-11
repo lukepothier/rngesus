@@ -2,7 +2,6 @@
 
 Easy-to-use API wrapping .NET's (cryptographically secure) `RNGCryptoServiceProvider`. Generate random strings, numbers, booleans or byte arrays without worrying about duplicates or insecure results.
 
-&nbsp;
 ## Why?
 
 Generating random values in .NET isn't as easy as it should be. `System.Random` provides an easy-to-use API for generating numbers which may _appear_ to be pseudorandom, 
@@ -10,18 +9,15 @@ but which are actually trivial to predict if one knows the seed with which the v
 .NET's method of generating cryptographically secure random numbers is the `RNGCryptoServiceProvider` class in using `System.Security.Cryptography`, but it's API is 
 significantly more convoluted than `System.Random`'s. This library merely abstracts the implementation details and provided a simple, static API.
 
-&nbsp;
 ## When?
 
 Use this library when you require genuinely unpredictable random values, and are willing to endure the performance hit in the name of entropy. Cryptographically secure RNG is
 fundamentally slower than insecure RNG.
 
-&nbsp;
 ## How?
 
 Install the package from [NuGet](http://todo.com): `Install-Package Luke.RNGesus`
 
-&nbsp;
 #### Booleans:
 
 ```csharp
@@ -29,7 +25,6 @@ Install the package from [NuGet](http://todo.com): `Install-Package Luke.RNGesus
 var randomBool = RNGesus.GenerateBool();
 ```
 
-&nbsp;
 #### Integer types:
 
 ```csharp
@@ -52,7 +47,6 @@ var randomLong = RNGesus.GenerateLong(4294967296);
 var randomLong = RNGesus.GenerateLong(4294967296, 8589934592);
 ```
 
-&nbsp;
 #### Strings:
 
 ```csharp
@@ -71,9 +65,8 @@ var randomString = RNGesus.GenerateString(16, "aaabbc", false);
 //or***:
 var randomString = RNGesus.GenerateString(16, new char[] {'a', 'a', 'a', 'b', 'b', 'c'}, false);
 ```
-*** Only do this if you understand the ramifications - weighting the outputs lowers the entropy
+*** Only do this if you understand the ramifications - weighting the outputs lowers the entropy.
 
-&nbsp;
 #### Floating-point types:
 
 ```csharp
@@ -84,7 +77,6 @@ var randomFloat = RNGesus.GenerateFloat();
 var randomDouble = RNGesus.GenerateDouble();
 ```
 
-&nbsp;
 #### Byte arrays:
 
 ```csharp
@@ -92,7 +84,6 @@ var randomDouble = RNGesus.GenerateDouble();
 var randomByteArray = RNGesus.GenerateByteArray(16);
 ```
 
-&nbsp;
 #### Bonus:
 
 ```csharp
@@ -100,7 +91,6 @@ var randomByteArray = RNGesus.GenerateByteArray(16);
 var randomString = RNGesus.GenerateByteArray(RNGesus.GenerateInt(16, 32));
 ```
 
-&nbsp;
 ## A word of warning:
 
 Generating strings with custom character sets is only **truly** uniform if `256` evenly divides the number of available characters. This is because there are `256` possible values of a single byte,
@@ -119,7 +109,6 @@ given output byte than one another. A more appropriate character set would be:
 
 which is `64` characters long - and also happens to be what RNGesus uses when no character set is specified.
 
-&nbsp;
 ## Acknowledgements
 
 * GitHub user [Markus Olsson (niik)](https://github.com/niik), whose [implementation](https://gist.github.com/niik/1017834) RNGesus borrows from.
