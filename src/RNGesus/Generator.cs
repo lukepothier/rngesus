@@ -239,8 +239,13 @@ namespace RNGesus
         {
             var validCharacterArray = validCharacters.ToCharArray();
 
+            var distinctValidCharacterArray = validCharacterArray.Distinct().ToArray();
+
+            if (distinctValidCharacterArray.Length <= 1)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
+
             if (removeDuplicates)
-                validCharacterArray = validCharacterArray.Distinct().ToArray();
+                validCharacterArray = distinctValidCharacterArray;
 
             return GenerateString(validCharacterArray, length, removeDuplicates);
         }
@@ -260,13 +265,15 @@ namespace RNGesus
         /// </remarks>
         public static string GenerateString(char[] validCharacters, int length, bool removeDuplicates = true)
         {
+            var distinctValidCharacterArray = validCharacters.Distinct().ToArray();
+
+            if (distinctValidCharacterArray.Length <= 1)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
+
             if (removeDuplicates)
-                validCharacters = validCharacters.Distinct().ToArray();
+                validCharacters = distinctValidCharacterArray;
 
             var validCharactersLength = validCharacters.Length;
-
-            if (validCharactersLength <= 1)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
 
             if (256 % validCharactersLength != 0)
                 Trace.TraceWarning("The number of valid characters supplied cannot be evenly divided by 256. The entropy of the output is compromised.");
