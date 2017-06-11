@@ -1,4 +1,4 @@
-﻿// Generator.cs
+﻿// RNGesus.cs
 // RNGesus is licensed using the MIT License
 // Author: Luke Pothier <lukepothier@gmail.com>
 
@@ -13,13 +13,13 @@ namespace RNGesus
     /// <summary>
     /// Static secure pseudorandom generator
     /// </summary>
-    public static class Generator
+    public static class RNGesus
     {
         #region Init/Ctor
 
-        static RNGCryptoServiceProvider _prng;
+        static readonly RNGCryptoServiceProvider _prng;
 
-        static Generator()
+        static RNGesus()
         {
             _prng = new RNGCryptoServiceProvider();
         }
@@ -232,7 +232,7 @@ namespace RNGesus
         /// A random string containing only characters present in <paramref name="validCharacters"/> of the requested length
         /// </returns>
         /// <remarks>
-        /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>, 
+        /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>,
         /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
         /// </remarks>
         public static string GenerateString(int length, string validCharacters, bool removeDuplicates = true)
@@ -260,7 +260,7 @@ namespace RNGesus
         /// A random string containing only characters present in <paramref name="validCharacters"/> of the requested length
         /// </returns>
         /// <remarks>
-        /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>, 
+        /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>,
         /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
         /// </remarks>
         public static string GenerateString(int length, char[] validCharacters, bool removeDuplicates = true)
