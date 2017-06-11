@@ -7,8 +7,8 @@
     <ProjectGuid>{14ED63B3-39BC-45B6-8011-6031B4B96596}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EZRNG</RootNamespace>
-    <AssemblyName>EZRNG</AssemblyName>
+    <RootNamespace>RNGesus</RootNamespace>
+    <AssemblyName>RNGesus</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EZRandom.cs" />
+    <Compile Include="Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

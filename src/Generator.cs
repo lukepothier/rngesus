@@ -4,15 +4,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EZRNG
+namespace RNGesus
 {
-    public static class EZRandom
+    public static class Generator
     {
         #region Init/Ctor
 
         static RNGCryptoServiceProvider _prng;
 
-        static EZRandom()
+        static Generator()
         {
             _prng = new RNGCryptoServiceProvider();
         }
