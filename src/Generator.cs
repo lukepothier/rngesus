@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Generator.cs
+// RNGesus is licensed using the MIT License
+// Author: Luke Pothier <lukepothier@gmail.com>
+
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
@@ -6,6 +10,9 @@ using System.Text;
 
 namespace RNGesus
 {
+    /// <summary>
+    /// Static secure pseudorandom generator
+    /// </summary>
     public static class Generator
     {
         #region Init/Ctor
