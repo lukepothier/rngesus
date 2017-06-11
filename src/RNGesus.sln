@@ -5,11 +5,6 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RNGesus", "RNGesus\RNGesus.csproj", "{14ED63B3-39BC-45B6-8011-6031B4B96596}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!NuGet", "!NuGet", "{86042596-E620-4FEF-87C5-3B4B94D83FF8}"
-	ProjectSection(SolutionItems) = preProject
-		!NuGet\RNGesus.nuspec = !NuGet\RNGesus.nuspec
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RNGesus.Tests", "RNGesus.Tests\RNGesus.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!Solution Items", "!Solution Items", "{EE1D22E1-C993-4747-9394-41ED9B98B225}"

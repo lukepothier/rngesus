@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Luke.RNGesus</id>
+    <version>1.0</version>
+    <title>RNGesus</title>
+    <authors>Luke Pothier</authors>
+    <owners>Luke Pothier</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Easy-to-use API wrapping .NET's (cryptographically secure) RNGCryptoServiceProvider.</description>
+    <summary>Generate random strings, numbers, booleans or byte arrays without worrying about duplicates or insecure results.</summary>
+    <language>en-za</language>
+    <projectUrl>https://github.com/lukepothier/rngesus</projectUrl>
+    <licenseUrl>https://github.com/lukepothier/rngesus/blob/master/LICENSE</licenseUrl>
+    <tags>RNG Cryptography Random Pseudorandom</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework="net40" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

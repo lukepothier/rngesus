@@ -16,7 +16,7 @@ fundamentally slower than insecure RNG.
 
 ## How?
 
-Install the package from [NuGet](http://todo.com): `Install-Package Luke.RNGesus`
+Install the package from [NuGet](https://www.nuget.org/packages/Luke.RNGesus/1.0.0): `Install-Package Luke.RNGesus`
 
 #### Booleans:
 
@@ -109,8 +109,13 @@ given output byte than one another. A more appropriate character set would be:
 
 which is `64` characters long - and also happens to be what RNGesus uses when no character set is specified.
 
+
+## TODO:
+
+I may rework RNGesus to be a non-static, thread-safe IDisposable with a shared buffer. The performance gain and thread-safety is likely worth the ease-of-use sacrifice.
+
 ## Acknowledgements
 
-* GitHub user [Markus Olsson (niik)](https://github.com/niik), whose [implementation](https://gist.github.com/niik/1017834) RNGesus borrows from.
+* [Markus Olsson (niik)](https://github.com/niik), whose [CryptoRandom](https://gist.github.com/niik/1017834) RNGesus borrows from.
 
 For any comments, questions, complaints, suggestions or requests, please don't hesitate to [create an issue](https://github.com/lukepothier/rngesus/issues/new) or contact me at [lukepothier@gmail.com](mailto:lukepothier@gmail.com).
