@@ -66,7 +66,7 @@ namespace RNGesus
                 throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
 
             if (minimum == maximum)
-                return minimum;
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
 
             ulong difference = maximum - minimum;
 
@@ -127,7 +127,7 @@ namespace RNGesus
                 throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
 
             if (minimum == maximum)
-                return minimum;
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
 
             var difference = maximum - minimum;
 
@@ -219,14 +219,14 @@ namespace RNGesus
         public static string GenerateString(int length)
         {
             const string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
-            return GenerateString(validCharacters, length);
+            return GenerateString(length, validCharacters);
         }
 
         /// <summary>
         /// Generates a cryptographically secure random string
         /// </summary>
-        /// <param name="validCharacters">A string wrapping the character set of the output.</param>
         /// <param name="length">The length of the output required</param>
+        /// <param name="validCharacters">A string wrapping the character set of the output.</param>
         /// <param name="removeDuplicates">Whether or not to sanitise the input string to remove duplicate characters</param>
         /// <returns>
         /// A random string containing only characters present in <paramref name="validCharacters"/> of the requested length
@@ -235,7 +235,7 @@ namespace RNGesus
         /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>, 
         /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
         /// </remarks>
-        public static string GenerateString(string validCharacters, int length, bool removeDuplicates = true)
+        public static string GenerateString(int length, string validCharacters, bool removeDuplicates = true)
         {
             var validCharacterArray = validCharacters.ToCharArray();
 
@@ -247,14 +247,14 @@ namespace RNGesus
             if (removeDuplicates)
                 validCharacterArray = distinctValidCharacterArray;
 
-            return GenerateString(validCharacterArray, length, removeDuplicates);
+            return GenerateString(length, validCharacterArray, removeDuplicates);
         }
 
         /// <summary>
         /// Generates a cryptographically secure random string
         /// </summary>
-        /// <param name="validCharacters">The character set of the output</param>
         /// <param name="length">The length of the output required</param>
+        /// <param name="validCharacters">The character set of the output</param>
         /// <param name="removeDuplicates">Whether or not to sanitise the input string to remove duplicate characters</param>
         /// <returns>
         /// A random string containing only characters present in <paramref name="validCharacters"/> of the requested length
@@ -263,7 +263,7 @@ namespace RNGesus
         /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>, 
         /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
         /// </remarks>
-        public static string GenerateString(char[] validCharacters, int length, bool removeDuplicates = true)
+        public static string GenerateString(int length, char[] validCharacters, bool removeDuplicates = true)
         {
             var distinctValidCharacterArray = validCharacters.Distinct().ToArray();
 
