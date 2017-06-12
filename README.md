@@ -148,7 +148,7 @@ using (var rngesus = new RNGesus())
 // Generate a string of length somewhere in a given range:
 using (var rngesus = new RNGesus())
 {
-    var randomString = rngesus.GenerateByteArray(rngesus.GenerateInt(16, 32));
+    var randomString = rngesus.GenerateString(rngesus.GenerateInt(16, 32));
 }
 ```
 
