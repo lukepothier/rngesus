@@ -12,9 +12,9 @@
     <language>en-za</language>
     <projectUrl>https://github.com/lukepothier/rngesus</projectUrl>
     <licenseUrl>https://github.com/lukepothier/rngesus/blob/master/LICENSE</licenseUrl>
-    <tags>RNG Cryptography Random Pseudorandom</tags>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net40" />
-    </frameworkAssemblies>
+    <tags>RNG Cryptography Random</tags>
   </metadata>
+  <files>
+    <file src="..\bin\Release\Luke.RNG.*" target="lib\net46" />
+  </files>
 </package>
