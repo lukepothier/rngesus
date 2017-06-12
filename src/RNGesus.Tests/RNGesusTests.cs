@@ -2,7 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace RNGesus.Tests
+namespace Luke.RNG.Tests
 {
     /// <summary>
     /// The unit tests for RNGesus.Generator
@@ -19,39 +19,70 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateInt_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateInt());
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateInt());
+            }
+        }
 
         [Test]
         public void GenerateInt_Maximum_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateInt(99));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateInt(99));
+            }
+        }
 
         [Test]
         public void GenerateInt_MinimumAndMaximum_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateInt(999, 9999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateInt(999, 9999));
+            }
+        }
 
         [Test]
         public void GenerateInt_MinimumBelowMaximum_Throws()
-            => Assert.Throws<ArgumentOutOfRangeException>(() => RNGesus.GenerateInt(9999, 999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => rngesus.GenerateInt(9999, 999));
+            }
+        }
 
         [Test]
         public void GenerateInt_EqualMinimumAndMaximum_Throws()
-            => Assert.Throws<ArgumentException>(() => RNGesus.GenerateInt(999, 999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentException>(() => rngesus.GenerateInt(999, 999));
+            }
+        }
 
         [Test]
-        public void GenerateInt_ReturnsValidUnsignedInt()
+        public void GenerateInt_ReturnsValidInt()
         {
-            var result = RNGesus.GenerateInt();
-            Assert.That(() => result >= 0);
-            Assert.That(() => result <= uint.MaxValue);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateInt();
+                Assert.That(() => result >= 0);
+                Assert.That(() => result <= int.MaxValue);
+            }
         }
 
         [Test]
         public void GenerateInt_ReturnsNoDuplicates()
         {
-            var results = new uint[9];
+            var results = new int[9];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateInt();
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateInt();
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -59,15 +90,23 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateInt_Maximum_ReturnsInRange()
-            => Assert.That(() => RNGesus.GenerateInt(999) <= 999);
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.That(() => rngesus.GenerateInt(999) <= 999);
+            }
+        }
 
         [Test]
         public void GenerateInt_Maximum_ReturnsNoDuplicates()
         {
-            var results = new uint[9];
+            var results = new int[9];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateInt(999999);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateInt(999999);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -76,19 +115,25 @@ namespace RNGesus.Tests
         [Test]
         public void GenerateInt_MinimumAndMaximum_ReturnsInRange()
         {
-            var result = RNGesus.GenerateInt(999, 999999);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateInt(999, 999999);
 
-            Assert.That(() => result >= 999);
-            Assert.That(() => result <= 999999);
+                Assert.That(() => result >= 999);
+                Assert.That(() => result <= 999999);
+            }
         }
 
         [Test]
         public void GenerateInt_MinimumAndMaximum_ReturnsNoDuplicates()
         {
-            var results = new uint[9];
+            var results = new int[9];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateInt(999, 999999);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateInt(999, 999999);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -100,39 +145,70 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateLong_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateLong());
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateLong());
+            }
+        }
 
         [Test]
         public void GenerateLong_Maximum_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateLong(999999999999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateLong(999999999999));
+            }
+        }
 
         [Test]
         public void GenerateLong_MinimumAndMinimum_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateLong(999999999999, 999999999999999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateLong(999999999999, 999999999999999));
+            }
+        }
 
         [Test]
         public void GenerateLong_MinimumBelowMaximum_Throws()
-            => Assert.Throws<ArgumentOutOfRangeException>(() => RNGesus.GenerateLong(999999999999999, 999999999999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => rngesus.GenerateLong(999999999999999, 999999999999));
+            }
+        }
 
         [Test]
         public void GenerateLong_EqualMinimumAndMaximum_Throws()
-            => Assert.Throws<ArgumentException>(() => RNGesus.GenerateLong(999999999999, 999999999999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentException>(() => rngesus.GenerateLong(999999999999, 999999999999));
+            }
+        }
 
         [Test]
-        public void GenerateLong_ReturnsValidUnsignedLong()
+        public void GenerateLong_ReturnsValidLong()
         {
-            var result = RNGesus.GenerateLong();
-            Assert.That(() => result >= 0);
-            Assert.That(() => result <= ulong.MaxValue);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateLong();
+                Assert.That(() => result >= 0);
+                Assert.That(() => result <= long.MaxValue);
+            }
         }
 
         [Test]
         public void GenerateLong_ReturnsNoDuplicates()
         {
-            var results = new ulong[9];
+            var results = new long[9];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateLong();
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateLong();
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -140,15 +216,23 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateLong_Maximum_ReturnsInRange()
-            => Assert.That(() => RNGesus.GenerateLong(999) <= 999);
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.That(() => rngesus.GenerateLong(999) <= 999);
+            }
+        }
 
         [Test]
         public void GenerateLong_Maximum_ReturnsNoDuplicates()
         {
-            var results = new ulong[9];
+            var results = new long[9];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateLong(999999);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateLong(999999);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -157,19 +241,25 @@ namespace RNGesus.Tests
         [Test]
         public void GenerateLong_MinimumAndMaximum_ReturnsInRange()
         {
-            var result = RNGesus.GenerateLong(999, 999999);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateLong(999, 999999);
 
-            Assert.That(() => result >= 999);
-            Assert.That(() => result <= 999999);
+                Assert.That(() => result >= 999);
+                Assert.That(() => result <= 999999);
+            }
         }
 
         [Test]
         public void GenerateLong_MinimumAndMaximum_ReturnsNoDuplicates()
         {
-            var results = new ulong[9];
+            var results = new long[9];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateLong(999, 999999);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateLong(999, 999999);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -181,15 +271,23 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateFloat_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateFloat());
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateFloat());
+            }
+        }
 
         [Test]
         public void GenerateFloat_ReturnsBetween0And1()
         {
-            var result = RNGesus.GenerateFloat();
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateFloat();
 
-            Assert.That(result >= 0);
-            Assert.That(result <= 1);
+                Assert.That(result >= 0);
+                Assert.That(result <= 1);
+            }
         }
 
         [Test]
@@ -198,7 +296,10 @@ namespace RNGesus.Tests
             var results = new float[999];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateFloat();
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateFloat();
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -210,15 +311,23 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateDouble_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateDouble());
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateDouble());
+            }
+        }
 
         [Test]
         public void GenerateDouble_ReturnsBetween0And1()
         {
-            var result = RNGesus.GenerateDouble();
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateDouble();
 
-            Assert.That(result >= 0);
-            Assert.That(result <= 1);
+                Assert.That(result >= 0);
+                Assert.That(result <= 1);
+            }
         }
 
         [Test]
@@ -227,7 +336,10 @@ namespace RNGesus.Tests
             var results = new double[999];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateDouble();
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateDouble();
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -239,7 +351,12 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateBool_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateBool());
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateBool());
+            }
+        }
 
         #endregion Boolean
 
@@ -247,15 +364,23 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateByteArray_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateByteArray(999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateByteArray(999));
+            }
+        }
 
         [Test]
         public void GenerateByteArray_ReturnsCorrectLength()
         {
             const int expectedLength = 999;
-            var result = RNGesus.GenerateByteArray(expectedLength);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateByteArray(expectedLength);
 
-            Assert.That((result.Length == expectedLength));
+                Assert.That((result.Length == expectedLength));
+            }
         }
 
         [Test]
@@ -264,7 +389,10 @@ namespace RNGesus.Tests
             var results = new byte[999][];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateByteArray(999);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateByteArray(999);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -276,47 +404,95 @@ namespace RNGesus.Tests
 
         [Test]
         public void GenerateString_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateString(999));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateString(999));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersString_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateString(999, "123456789"));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateString(999, "123456789"));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersString_Throws()
-            => Assert.Throws<ArgumentException>(() => RNGesus.GenerateString(999, "9"));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentException>(() => rngesus.GenerateString(999, "9"));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersString_RemoveDuplicatesFalse_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateString(999, "123456789", false));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateString(999, "123456789", false));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersString_RemoveDuplicatesFalse_Throws()
-            => Assert.Throws<ArgumentException>(() => RNGesus.GenerateString(999, "999", false));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentException>(() => rngesus.GenerateString(999, "999", false));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersCharArray_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateString(999, new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' }));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateString(999, new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' }));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersCharArray_Throws()
-            => Assert.Throws<ArgumentException>(() => RNGesus.GenerateString(999, new char[] { '1' }));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentException>(() => rngesus.GenerateString(999, new char[] { '1' }));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersCharArray_RemoveDuplicatesFalse_DoesNotThrow()
-            => Assert.DoesNotThrow(() => RNGesus.GenerateString(999, new char[] { '1', '2', '3', '4', '5', '6', '7', '8' }, false));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateString(999, new char[] { '1', '2', '3', '4', '5', '6', '7', '8' }, false));
+            }
+        }
 
         [Test]
         public void GenerateString_ValidCharactersCharArray_RemoveDuplicatesFalse_Throws()
-            => Assert.Throws<ArgumentException>(() => RNGesus.GenerateString(999, new char[] { '1', '1', '1' }, false));
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.Throws<ArgumentException>(() => rngesus.GenerateString(999, new char[] { '1', '1', '1' }, false));
+            }
+        }
 
         [Test]
         public void GenerateString_ReturnsCorrectLength()
         {
             const int expectedLength = 999;
-            var result = RNGesus.GenerateString(expectedLength);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateString(expectedLength);
 
-            Assert.That((result.Length == expectedLength));
+                Assert.That((result.Length == expectedLength));
+            }
         }
 
         [Test]
@@ -325,7 +501,10 @@ namespace RNGesus.Tests
             var results = new string[99];
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateString(99);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateString(99);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -336,9 +515,12 @@ namespace RNGesus.Tests
         {
             const int expectedLength = 999;
             const string validCharacters = "123456789";
-            var result = RNGesus.GenerateString(expectedLength, validCharacters);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateString(expectedLength, validCharacters);
 
-            Assert.That((result.Length == expectedLength));
+                Assert.That((result.Length == expectedLength));
+            }
         }
 
         [Test]
@@ -348,7 +530,10 @@ namespace RNGesus.Tests
             const string validCharacters = "123456789";
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateString(99, validCharacters);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateString(99, validCharacters);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -359,9 +544,12 @@ namespace RNGesus.Tests
         {
             const int expectedLength = 999;
             const string validCharacters = "123456789";
-            var result = RNGesus.GenerateString(expectedLength, validCharacters, false);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateString(expectedLength, validCharacters, false);
 
-            Assert.That((result.Length == expectedLength));
+                Assert.That((result.Length == expectedLength));
+            }
         }
 
         [Test]
@@ -371,7 +559,10 @@ namespace RNGesus.Tests
             const string validCharacters = "123456789";
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateString(99, validCharacters, false);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateString(99, validCharacters, false);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -382,9 +573,12 @@ namespace RNGesus.Tests
         {
             const int expectedLength = 999;
             var validCharacters = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            var result = RNGesus.GenerateString(expectedLength, validCharacters);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateString(expectedLength, validCharacters);
 
-            Assert.That((result.Length == expectedLength));
+                Assert.That((result.Length == expectedLength));
+            }
         }
 
         [Test]
@@ -394,7 +588,10 @@ namespace RNGesus.Tests
             var validCharacters = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateString(99, validCharacters);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateString(99, validCharacters);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
@@ -405,9 +602,12 @@ namespace RNGesus.Tests
         {
             const int expectedLength = 999;
             var validCharacters = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            var result = RNGesus.GenerateString(expectedLength, validCharacters, false);
+            using (var rngesus = new RNGesus())
+            {
+                var result = rngesus.GenerateString(expectedLength, validCharacters, false);
 
-            Assert.That((result.Length == expectedLength));
+                Assert.That((result.Length == expectedLength));
+            }
         }
 
         [Test]
@@ -417,7 +617,10 @@ namespace RNGesus.Tests
             var validCharacters = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             for (var i = 0; i < results.Length; i++)
             {
-                results[i] = RNGesus.GenerateString(99, validCharacters, false);
+                using (var rngesus = new RNGesus())
+                {
+                    results[i] = rngesus.GenerateString(99, validCharacters, false);
+                }
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
