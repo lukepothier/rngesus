@@ -1,7 +1,6 @@
 # RNGesus
 
 [![Build status](https://ci.appveyor.com/api/projects/status/njv1rqxqxjdbef9v?svg=true)](https://ci.appveyor.com/project/lukepothier/rngesus)
-[![codecov](https://codecov.io/gh/lukepothier/rngesus/branch/master/graph/badge.svg)](https://codecov.io/gh/lukepothier/rngesus)
 
 Easy-to-use API wrapping .NET's (cryptographically secure) `RNGCryptoServiceProvider`. Generate random strings, numbers, booleans or byte arrays without worrying about duplicates or insecure results.
 
