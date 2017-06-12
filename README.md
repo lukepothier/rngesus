@@ -171,7 +171,11 @@ byte than one another. In this example, `abcdefgh` are 25% more likely to appear
 
 which is `64` characters long - and also happens to be what RNGesus uses when no custom character set is specified.
 
-## Acknowledgements
+## TODO:
+
+Currently RNGesus only supports .NET v4.6 (`net46`). Version 1.2 will add support for other versions of .NET.
+
+## Acknowledgements:
 
 * [Markus Olsson (niik)](https://github.com/niik), whose [CryptoRandom](https://gist.github.com/niik/1017834) RNGesus borrows from.
 
