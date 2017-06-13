@@ -26,21 +26,47 @@ namespace Luke.RNG.Tests
             }
         }
 
-        [Test]
-        public void GenerateInt_Maximum_DoesNotThrow()
+        [TestCase((uint)1)]
+        [TestCase((uint)999999)]
+        [TestCase(uint.MaxValue)]
+        public void GenerateInt_Maximum_DoesNotThrow(uint x)
         {
             using (var rngesus = new RNGesus())
             {
-                Assert.DoesNotThrow(() => rngesus.GenerateInt(99));
+                Assert.DoesNotThrow(() => rngesus.GenerateInt(x));
             }
         }
 
-        [Test]
-        public void GenerateInt_MinimumAndMaximum_DoesNotThrow()
+        [TestCase(1)]
+        [TestCase(999999)]
+        [TestCase(int.MaxValue)]
+        public void GenerateInt_Maximum_DoesNotThrow(int x)
         {
             using (var rngesus = new RNGesus())
             {
-                Assert.DoesNotThrow(() => rngesus.GenerateInt(999, 9999));
+                Assert.DoesNotThrow(() => rngesus.GenerateInt(x));
+            }
+        }
+
+        [TestCase((uint)1, (uint)999)]
+        [TestCase((uint)999, (uint)999999)]
+        [TestCase((uint)999999, uint.MaxValue)]
+        public void GenerateInt_MinimumAndMaximum_DoesNotThrow(uint x, uint y)
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateInt(x, y));
+            }
+        }
+
+        [TestCase(1, 999)]
+        [TestCase(999, 999999)]
+        [TestCase(999999, int.MaxValue)]
+        public void GenerateInt_MinimumAndMaximum_DoesNotThrow(int x, int y)
+        {
+            using (var rngesus = new RNGesus())
+            {
+                Assert.DoesNotThrow(() => rngesus.GenerateInt(x, y));
             }
         }
 
@@ -624,6 +650,65 @@ namespace Luke.RNG.Tests
             }
 
             Assert.That(results.Distinct().Count() == results.Count());
+        }
+
+        [Test]
+        public void SharedBufferTest()
+        {
+            const int iterations = 999;
+            var integerResults = new int[iterations];
+            var longResults = new long[iterations];
+            var boolResults = new bool[iterations];
+            var floatResults = new float[iterations];
+            var doubleResults = new double[iterations];
+            var byteResults = new byte[iterations][];
+            var stringResults = new string[iterations];
+
+            using (var rngesus = new RNGesus())
+            {
+                for (var i = 0; i < iterations; i++)
+                    integerResults[i] = rngesus.GenerateInt();
+
+                for (var i = 0; i < iterations; i++)
+                    longResults[i] = rngesus.GenerateLong();
+
+                for (var i = 0; i < iterations; i++)
+                    boolResults[i] = rngesus.GenerateBool();
+
+                for (var i = 0; i < iterations; i++)
+                    floatResults[i] = rngesus.GenerateFloat();
+
+                for (var i = 0; i < iterations; i++)
+                    doubleResults[i] = rngesus.GenerateDouble();
+
+                for (var i = 0; i < iterations; i++)
+                    byteResults[i] = rngesus.GenerateByteArray(99);
+
+                for (var i = 0; i < iterations; i++)
+                    stringResults[i] = rngesus.GenerateString(99);
+            }
+
+            Assert.That(integerResults.Length == iterations);
+            Assert.That(longResults.Length == iterations);
+            Assert.That(boolResults.Length == iterations);
+            Assert.That(floatResults.Length == iterations);
+            Assert.That(doubleResults.Length == iterations);
+            Assert.That(byteResults.Length == iterations);
+            Assert.That(stringResults.Length == iterations);
+        }
+
+        [Test]
+        public void LockTest()
+        {
+            var result = "";
+
+            using (var rngesus = new RNGesus(9999))
+            {
+                result = rngesus.GenerateString(rngesus.GenerateInt(999, 9999));
+            }
+
+            Assert.That(result.Length >= 999);
+            Assert.That(result.Length <= 9999);
         }
 
         #endregion Strings
