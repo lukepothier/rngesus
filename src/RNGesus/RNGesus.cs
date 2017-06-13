@@ -6,10 +6,8 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
 
 namespace Luke.RNG
 {
@@ -20,12 +18,10 @@ namespace Luke.RNG
     {
         #region Init/Ctor
 
-        bool _disposed;
-        readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
         const int DEFAULT_SHARED_BUFFER_LENGTH = 1024;
         static RNGCryptoServiceProvider _prng;
         byte[] _sharedBuffer;
-        int _currentBufferIndex;
+        uint _currentBufferIndex;
         readonly int _bufferLength;
 
         /// <summary>
@@ -43,6 +39,12 @@ namespace Luke.RNG
         /// </summary>
         public RNGesus(int sharedBufferSize)
         {
+            if (sharedBufferSize < 1)
+            {
+                Trace.TraceWarning("Invalid buffer size requested. Initialising RNGesus with 1024-byte buffer.");
+                sharedBufferSize = DEFAULT_SHARED_BUFFER_LENGTH;
+            }
+
             _prng = new RNGCryptoServiceProvider();
             _bufferLength = sharedBufferSize;
         }
@@ -56,7 +58,7 @@ namespace Luke.RNG
             _currentBufferIndex = 0;
         }
 
-        void RequestBuffer(int bytesRequired)
+        void RequestBuffer(uint bytesRequired)
         {
             if (_sharedBuffer == null)
                 InitSharedBuffer();
@@ -84,9 +86,7 @@ namespace Luke.RNG
             {
                 RequestBuffer(sizeof(uint));
 
-                _prng.GetBytes(_sharedBuffer);
-
-                var result = BitConverter.ToUInt32(_sharedBuffer, _currentBufferIndex);
+                var result = BitConverter.ToUInt32(_sharedBuffer, (int)_currentBufferIndex);
 
                 _currentBufferIndex += sizeof(uint);
 
@@ -107,6 +107,22 @@ namespace Luke.RNG
             => GenerateInt(uint.MinValue, maximum);
 
         /// <summary>
+        /// Generates a cryptographically secure unsigned 32-bit random integer equal to or below a provided maximum.
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="maximum">The maximum value of the integer required</param>
+        /// <returns>
+        /// A random unsigned 32-bit random integer equal to or below the provided maximum
+        /// </returns>
+        public int GenerateInt(int maximum)
+        {
+            if (maximum < 0)
+                return GenerateInt((uint)(maximum * -1));
+
+            return GenerateInt((uint)(maximum));
+        }
+
+        /// <summary>
         /// Generates a cryptographically secure unsigned 32-bit random integer within a provided range
         /// </summary>
         /// <param name="minimum">The minimum value of the integer required</param>
@@ -116,22 +132,24 @@ namespace Luke.RNG
         /// </returns>
         public int GenerateInt(uint minimum, uint maximum)
         {
+            if (minimum > maximum)
+                throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
+
+            if (minimum == maximum)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
+
+            if (maximum == 0)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
+
+            ulong difference = maximum - minimum;
+
             lock (this)
             {
                 RequestBuffer(sizeof(uint));
 
-                if (minimum > maximum)
-                    throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
-
-                if (minimum == maximum)
-                    throw new ArgumentException("Only one output is possible - output is determinable from inputs");
-
-                ulong difference = maximum - minimum;
-
                 while (true)
                 {
-                    _prng.GetBytes(_sharedBuffer);
-                    var randomInteger = BitConverter.ToUInt32(_sharedBuffer, _currentBufferIndex);
+                    var randomInteger = BitConverter.ToUInt32(_sharedBuffer, (int)_currentBufferIndex);
 
                     const ulong max = (ulong)uint.MaxValue + 1;
                     var remainder = max % difference;
@@ -147,6 +165,31 @@ namespace Luke.RNG
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure unsigned 32-bit random integer within a provided range
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="minimum">The minimum value of the integer required</param>
+        /// <param name="maximum">The maximum value of the integer required</param>
+        /// <returns>
+        /// A random unsigned 32-bit random integer within the provided range
+        /// </returns>
+        public int GenerateInt(int minimum, int maximum)
+        {
+            uint minimumUint = 0;
+            uint maximumUint = 0;
+
+            minimumUint = minimum < 0
+                ? (uint)(minimum * -1)
+                : (uint)minimum;
+
+            maximumUint = maximum < 0
+                ? (uint)(maximum * -1)
+                : (uint)maximum;
+
+            return GenerateInt(minimumUint, maximumUint);
         }
 
         #endregion UInt32
@@ -165,9 +208,7 @@ namespace Luke.RNG
             {
                 RequestBuffer(sizeof(ulong));
 
-                _prng.GetBytes(_sharedBuffer);
-
-                var result = BitConverter.ToUInt64(_sharedBuffer, _currentBufferIndex);
+                var result = BitConverter.ToUInt64(_sharedBuffer, (int)_currentBufferIndex);
 
                 _currentBufferIndex += sizeof(ulong);
 
@@ -188,6 +229,22 @@ namespace Luke.RNG
             => GenerateLong(ulong.MinValue, maximum);
 
         /// <summary>
+        /// Generates a cryptographically secure unsigned 64-bit random integer equal to or below a provided maximum
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="maximum">The maximum value of the integer required</param>
+        /// <returns>
+        /// A random unsigned 64-bit integer equal to or below the provided maximum
+        /// </returns>
+        public long GenerateLong(long maximum)
+        {
+            if (maximum < 0)
+                return GenerateLong((ulong)(maximum * -1));
+
+            return GenerateLong((ulong)(maximum));
+        }
+
+        /// <summary>
         /// Generates a cryptographically secure unsigned random 64-bit integer within a provided range
         /// </summary>
         /// <param name="minimum">The minimum value of the integer required</param>
@@ -197,22 +254,24 @@ namespace Luke.RNG
         /// </returns>
         public long GenerateLong(ulong minimum, ulong maximum)
         {
+            if (minimum > maximum)
+                throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
+
+            if (minimum == maximum)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
+
+            if (maximum == 0)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
+
+            var difference = maximum - minimum;
+
             lock (this)
             {
-                if (minimum > maximum)
-                    throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
-
-                if (minimum == maximum)
-                    throw new ArgumentException("Only one output is possible - output is determinable from inputs");
-
                 RequestBuffer(sizeof(ulong));
-
-                var difference = maximum - minimum;
 
                 while (true)
                 {
-                    _prng.GetBytes(_sharedBuffer);
-                    var randomInteger = BitConverter.ToUInt64(_sharedBuffer, _currentBufferIndex);
+                    var randomInteger = BitConverter.ToUInt64(_sharedBuffer, (int)_currentBufferIndex);
 
                     var remainder = ulong.MaxValue % difference;
                     if (randomInteger < ulong.MaxValue - remainder)
@@ -227,6 +286,31 @@ namespace Luke.RNG
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure unsigned random 64-bit integer within a provided range
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="minimum">The minimum value of the integer required</param>
+        /// <param name="maximum">The maximum value of the integer required</param>
+        /// <returns>
+        /// A random unsigned 64-bit integer within the provided range
+        /// </returns>
+        public long GenerateLong(long minimum, long maximum)
+        {
+            ulong minimumUlong = 0;
+            ulong maximumUlong = 0;
+
+            minimumUlong = minimum < 0
+                ? (ulong)(minimum * -1)
+                : (ulong)minimum;
+
+            maximumUlong = maximum < 0
+                ? (ulong)(maximum * -1)
+                : (ulong)maximum;
+
+            return GenerateLong(minimumUlong, maximumUlong);
         }
 
         #endregion UInt64
@@ -279,13 +363,16 @@ namespace Luke.RNG
         /// <returns>
         /// An array of random bytes
         /// </returns>
-        public byte[] GenerateByteArray(int length)
+        public byte[] GenerateByteArray(uint length)
         {
+            if (length == 0)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(length));
+
             lock (this)
             {
                 RequestBuffer(length);
 
-                var result = _sharedBuffer.Take(length).ToArray();
+                var result = _sharedBuffer.Take((int)length).ToArray();
 
                 _currentBufferIndex += length;
 
@@ -304,7 +391,7 @@ namespace Luke.RNG
         /// <returns>
         /// A random string containing upper- and lower-case (ISO basic Latin) alphabetical letters, numbers, hyphens, and underscores of the requested length
         /// </returns>
-        public string GenerateString(int length)
+        public string GenerateString(uint length)
         {
             const string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
             return GenerateString(length, validCharacters);
@@ -312,6 +399,44 @@ namespace Luke.RNG
 
         /// <summary>
         /// Generates a cryptographically secure random string
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="length">The length of the output required</param>
+        /// <returns>
+        /// A random string containing upper- and lower-case (ISO basic Latin) alphabetical letters, numbers, hyphens, and underscores of the requested length
+        /// </returns>
+        public string GenerateString(int length)
+        {
+            if (length < 0)
+                length = length * -1;
+
+            return GenerateString((uint)length);
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure random string
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="length">The length of the output required</param>
+        /// <param name="validCharacters">A string wrapping the character set of the output.</param>
+        /// <param name="removeDuplicates">Whether or not to sanitise the input string to remove duplicate characters</param>
+        /// <returns>
+        /// A random string containing only characters present in <paramref name="validCharacters"/> of the requested length
+        /// </returns>
+        /// <remarks>
+        /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>,
+        /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
+        /// </remarks>
+        public string GenerateString(uint length, string validCharacters, bool removeDuplicates = true)
+        {
+            var validCharacterArray = validCharacters.ToCharArray();
+
+            return GenerateString(length, validCharacterArray, removeDuplicates);
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure random string
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
         /// </summary>
         /// <param name="length">The length of the output required</param>
         /// <param name="validCharacters">A string wrapping the character set of the output.</param>
@@ -325,17 +450,10 @@ namespace Luke.RNG
         /// </remarks>
         public string GenerateString(int length, string validCharacters, bool removeDuplicates = true)
         {
-            var validCharacterArray = validCharacters.ToCharArray();
+            if (length < 0)
+                length = length * -1;
 
-            var distinctValidCharacterArray = validCharacterArray.Distinct().ToArray();
-
-            if (distinctValidCharacterArray.Length <= 1)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
-
-            if (removeDuplicates)
-                validCharacterArray = distinctValidCharacterArray;
-
-            return GenerateString(length, validCharacterArray, removeDuplicates);
+            return GenerateString((uint)length, validCharacters, removeDuplicates);
         }
 
         /// <summary>
@@ -351,62 +469,79 @@ namespace Luke.RNG
         /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>,
         /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
         /// </remarks>
-        public string GenerateString(int length, char[] validCharacters, bool removeDuplicates = true)
+        public string GenerateString(uint length, char[] validCharacters, bool removeDuplicates = true)
         {
+            var distinctValidCharacterArray = validCharacters.Distinct().ToArray();
+
+            if (distinctValidCharacterArray.Length <= 1)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
+
+            if (length == 0)
+                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(length));
+
+            if (removeDuplicates)
+                validCharacters = distinctValidCharacterArray;
+
+            var validCharactersLength = validCharacters.Length;
+
+            if (256 % validCharactersLength != 0)
+                Trace.TraceWarning("The number of valid characters supplied cannot be evenly divided by 256. The entropy of the output is compromised.");
+
+            var stringBuilder = new StringBuilder();
+
+            var tempLength = length;
+
             lock (this)
             {
-                var distinctValidCharacterArray = validCharacters.Distinct().ToArray();
-
-                if (distinctValidCharacterArray.Length <= 1)
-                    throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
-
-                if (removeDuplicates)
-                    validCharacters = distinctValidCharacterArray;
-
-                var validCharactersLength = validCharacters.Length;
-
-                if (256 % validCharactersLength != 0)
-                    Trace.TraceWarning("The number of valid characters supplied cannot be evenly divided by 256. The entropy of the output is compromised.");
-
-                var stringBuilder = new StringBuilder();
-
-                RequestBuffer(length);
+                RequestBuffer(tempLength);
 
                 while (length-- > 0)
                 {
+                    // It's necessary to recreate these bytes during iterating
                     _prng.GetBytes(_sharedBuffer);
-                    var index = BitConverter.ToUInt32(_sharedBuffer, _currentBufferIndex);
+                    var index = BitConverter.ToUInt32(_sharedBuffer, (int)_currentBufferIndex);
                     stringBuilder.Append(validCharacters[(int)(index % (uint)validCharactersLength)]);
                 }
 
                 var result = stringBuilder.ToString();
 
-                _currentBufferIndex += length;
+                _currentBufferIndex += tempLength;
 
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure random string
+        /// If a negative argument is received, it will be treated as it's equivalent positive value. 
+        /// </summary>
+        /// <param name="length">The length of the output required</param>
+        /// <param name="validCharacters">The character set of the output</param>
+        /// <param name="removeDuplicates">Whether or not to sanitise the input string to remove duplicate characters</param>
+        /// <returns>
+        /// A random string containing only characters present in <paramref name="validCharacters"/> of the requested length
+        /// </returns>
+        /// <remarks>
+        /// WARNING: If 256 cannot evenly divide the number of characters (or number of distinct characters if <paramref name="removeDuplicates"/> is true) in <paramref name="validCharacters"/>,
+        /// then the entropy of the output is compromised. For best results, ensure that 256 evenly divides the number of valid characters.
+        /// </remarks>
+        public string GenerateString(int length, char[] validCharacters, bool removeDuplicates = true)
+        {
+            if (length < 0)
+                length = length * -1;
+
+            return GenerateString((uint)length, validCharacters, removeDuplicates);
         }
 
         #endregion Strings
 
         #region GC
 
+        /// <summary>
+        /// Disposes the instance of RNGesus
+        /// </summary>
         public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-
-            if (disposing)
-                _handle.Dispose();
-
-            _disposed = true;
-        }
+            => GC.SuppressFinalize(this);
 
         #endregion GC
     }
