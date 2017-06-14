@@ -15,6 +15,6 @@
     <tags>RNG Cryptography Random</tags>
   </metadata>
   <files>
-    <file src="..\bin\Release\Luke.RNG.*" target="lib\net46" />
+    <file src="..\bin\Release\Luke.RNG.*" target="lib\net40" />
   </files>
 </package>
