@@ -18,7 +18,7 @@ fundamentally slower than insecure RNG.
 
 ## How?
 
-Install the package from [NuGet](https://www.nuget.org/packages/Luke.RNGesus/1.0.0): `Install-Package Luke.RNGesus`
+Install the package from [NuGet](https://www.nuget.org/packages/Luke.RNGesus): `Install-Package Luke.RNGesus`
 
 Add the using statement: `using Luke.RNG`
 
