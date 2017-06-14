@@ -72,6 +72,19 @@ namespace Luke.RNG
 
         #endregion Init/Ctor
 
+        #region Boolean
+
+        /// <summary>
+        /// Generates a cryptographically secure random boolean
+        /// </summary>
+        /// <returns>
+        /// A random boolean
+        /// </returns>
+        public bool GenerateBool()
+            => GenerateInt() % 2 == 0;
+
+        #endregion Boolean
+
         #region UInt32
 
         /// <summary>
@@ -138,9 +151,6 @@ namespace Luke.RNG
             if (minimum == maximum)
                 throw new ArgumentException("Only one output is possible - output is determinable from inputs");
 
-            if (maximum == 0)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
-
             ulong difference = maximum - minimum;
 
             lock (this)
@@ -178,18 +188,18 @@ namespace Luke.RNG
         /// </returns>
         public int GenerateInt(int minimum, int maximum)
         {
-            uint minimumUint = 0;
-            uint maximumUint = 0;
+            var uintMinimum = (uint)Math.Abs(minimum);
+            var uintMaximum = (uint)Math.Abs(maximum);
 
-            minimumUint = minimum < 0
-                ? (uint)(minimum * -1)
-                : (uint)minimum;
+            // If minimums and maximums have been switched due to Math.Abs, correct it to avoid exceptions
+            if (uintMinimum > uintMaximum)
+            {
+                var temp = uintMinimum;
+                uintMinimum = uintMaximum;
+                uintMaximum = temp;
+            }
 
-            maximumUint = maximum < 0
-                ? (uint)(maximum * -1)
-                : (uint)maximum;
-
-            return GenerateInt(minimumUint, maximumUint);
+            return GenerateInt(uintMinimum, uintMaximum);
         }
 
         #endregion UInt32
@@ -260,9 +270,6 @@ namespace Luke.RNG
             if (minimum == maximum)
                 throw new ArgumentException("Only one output is possible - output is determinable from inputs");
 
-            if (maximum == 0)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
-
             var difference = maximum - minimum;
 
             lock (this)
@@ -299,18 +306,18 @@ namespace Luke.RNG
         /// </returns>
         public long GenerateLong(long minimum, long maximum)
         {
-            ulong minimumUlong = 0;
-            ulong maximumUlong = 0;
+            var ulongMinimum = (ulong)Math.Abs(minimum);
+            var ulongMaximum = (ulong)Math.Abs(maximum);
 
-            minimumUlong = minimum < 0
-                ? (ulong)(minimum * -1)
-                : (ulong)minimum;
+            // If minimums and maximums have been switched due to Math.Abs, correct it to avoid exceptions
+            if (ulongMinimum > ulongMaximum)
+            {
+                var temp = ulongMinimum;
+                ulongMinimum = ulongMaximum;
+                ulongMaximum = temp;
+            }
 
-            maximumUlong = maximum < 0
-                ? (ulong)(maximum * -1)
-                : (ulong)maximum;
-
-            return GenerateLong(minimumUlong, maximumUlong);
+            return GenerateLong(ulongMinimum, ulongMaximum);
         }
 
         #endregion UInt64
@@ -341,19 +348,6 @@ namespace Luke.RNG
 
         #endregion Double
 
-        #region Boolean
-
-        /// <summary>
-        /// Generates a cryptographically secure random boolean
-        /// </summary>
-        /// <returns>
-        /// A random boolean
-        /// </returns>
-        public bool GenerateBool()
-            => GenerateInt() % 2 == 0;
-
-        #endregion Boolean
-
         #region Byte Array
 
         /// <summary>
@@ -378,6 +372,22 @@ namespace Luke.RNG
 
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure random byte array
+        /// If a negative argument is received, it will be treated as it's equivalent positive value.
+        /// </summary>
+        /// <param name="length">The length of the byte array required</param>
+        /// <returns>
+        /// An array of random bytes
+        /// </returns>
+        public byte[] GenerateByteArray(int length)
+        {
+            if (length < 0)
+                length = length * -1;
+
+            return GenerateByteArray((uint)length);
         }
 
         #endregion Byte Array
