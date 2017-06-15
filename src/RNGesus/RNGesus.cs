@@ -157,23 +157,18 @@ namespace Luke.RNG
             {
                 RequestBuffer(sizeof(uint));
 
-                while (true)
-                {
-                    var randomInteger = BitConverter.ToUInt32(_sharedBuffer, (int)_currentBufferIndex);
+                var randomInteger = BitConverter.ToUInt32(_sharedBuffer, (int)_currentBufferIndex);
 
-                    const ulong max = (ulong)uint.MaxValue + 1;
-                    var remainder = max % difference;
-                    if (randomInteger < max - remainder)
-                    {
-                        var result = (uint)(minimum + (randomInteger % difference));
+                const ulong max = (ulong)uint.MaxValue + 1;
+                var remainder = max % difference;
 
-                        _currentBufferIndex += sizeof(uint);
+                var result = (uint)(minimum + (randomInteger % difference));
 
-                        return (int)result >= 0
-                            ? (int)result
-                            : (int)result * -1;
-                    }
-                }
+                _currentBufferIndex += sizeof(uint);
+
+                return (int)result >= 0
+                    ? (int)result
+                    : (int)result * -1;
             }
         }
 
@@ -276,22 +271,17 @@ namespace Luke.RNG
             {
                 RequestBuffer(sizeof(ulong));
 
-                while (true)
-                {
-                    var randomInteger = BitConverter.ToUInt64(_sharedBuffer, (int)_currentBufferIndex);
+                var randomInteger = BitConverter.ToUInt64(_sharedBuffer, (int)_currentBufferIndex);
 
-                    var remainder = ulong.MaxValue % difference;
-                    if (randomInteger < ulong.MaxValue - remainder)
-                    {
-                        var result = minimum + (randomInteger % difference);
+                var remainder = ulong.MaxValue % difference;
 
-                        _currentBufferIndex += sizeof(ulong);
+                var result = minimum + (randomInteger % difference);
 
-                        return (long)result >= 0
-                            ? (long)result
-                            : (long)result * -1;
-                    }
-                }
+                _currentBufferIndex += sizeof(ulong);
+
+                return (long)result >= 0
+                    ? (long)result
+                    : (long)result * -1;
             }
         }
 
