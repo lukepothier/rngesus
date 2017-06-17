@@ -41,7 +41,7 @@ namespace Luke.RNG
         {
             if (sharedBufferSize < 1)
             {
-                Trace.TraceWarning("Invalid buffer size requested. Initialising RNGesus with 1024-byte buffer.");
+                Trace.TraceWarning(Constants.WARNING_INVALID_BUFFER_SIZE);
                 sharedBufferSize = DEFAULT_SHARED_BUFFER_LENGTH;
             }
 
@@ -64,7 +64,7 @@ namespace Luke.RNG
                 InitSharedBuffer();
 
             if (bytesRequired > _bufferLength)
-                throw new ArgumentOutOfRangeException(nameof(bytesRequired), "Number of bytes required exceeds the size of the shared buffer. Re-initialise RNGesus with a larger buffer size.");
+                throw new ArgumentOutOfRangeException(nameof(bytesRequired), Constants.ERROR_BYTES_EXCEEDS_BUFFER);
 
             if ((_sharedBuffer.Length - _currentBufferIndex) < bytesRequired)
                 InitSharedBuffer();
@@ -146,10 +146,10 @@ namespace Luke.RNG
         public int GenerateInt(uint minimum, uint maximum)
         {
             if (minimum > maximum)
-                throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
+                throw new ArgumentOutOfRangeException(nameof(minimum), Constants.ERROR_MINIMUM_EXCEEDS_MAXIMUM);
 
             if (minimum == maximum)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
+                throw new ArgumentException(Constants.ERROR_DETERMINABLE_OUTPUT);
 
             ulong difference = maximum - minimum;
 
@@ -260,10 +260,10 @@ namespace Luke.RNG
         public long GenerateLong(ulong minimum, ulong maximum)
         {
             if (minimum > maximum)
-                throw new ArgumentOutOfRangeException(nameof(minimum), "minimum cannot exceed maximum");
+                throw new ArgumentOutOfRangeException(nameof(minimum), Constants.ERROR_MINIMUM_EXCEEDS_MAXIMUM);
 
             if (minimum == maximum)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs");
+                throw new ArgumentException(Constants.ERROR_DETERMINABLE_OUTPUT);
 
             var difference = maximum - minimum;
 
@@ -350,7 +350,7 @@ namespace Luke.RNG
         public byte[] GenerateByteArray(uint length)
         {
             if (length == 0)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(length));
+                throw new ArgumentException(Constants.ERROR_DETERMINABLE_OUTPUT, nameof(length));
 
             lock (this)
             {
@@ -393,7 +393,7 @@ namespace Luke.RNG
         /// </returns>
         public string GenerateString(uint length)
         {
-            const string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
+            const string validCharacters = Constants.DEFAULT_STRING_CHARSET;
             return GenerateString(length, validCharacters);
         }
 
@@ -474,10 +474,10 @@ namespace Luke.RNG
             var distinctValidCharacterArray = validCharacters.Distinct().ToArray();
 
             if (distinctValidCharacterArray.Length <= 1)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(validCharacters));
+                throw new ArgumentException(Constants.ERROR_DETERMINABLE_OUTPUT, nameof(validCharacters));
 
             if (length == 0)
-                throw new ArgumentException("Only one output is possible - output is determinable from inputs", nameof(length));
+                throw new ArgumentException(Constants.ERROR_DETERMINABLE_OUTPUT, nameof(length));
 
             if (removeDuplicates)
                 validCharacters = distinctValidCharacterArray;
@@ -485,7 +485,7 @@ namespace Luke.RNG
             var validCharactersLength = validCharacters.Length;
 
             if (256 % validCharactersLength != 0)
-                Trace.TraceWarning("The number of valid characters supplied cannot be evenly divided by 256. The entropy of the output is compromised.");
+                Trace.TraceWarning(Constants.WARNING_ENTROPY_COMPROMISED);
 
             var stringBuilder = new StringBuilder();
 
